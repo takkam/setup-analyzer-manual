@@ -254,7 +254,7 @@ footer{color:var(--mute);font-size:12px;text-align:center;padding:8px 0 24px}
  <li><b>Circuit（サーキット）</b>を選びます。</li>
  <li><b>Corner（コーナー）</b>を押します。先頭の <span class="ui">全体</span> は、コーナーを決めずに「1周を通して」の印象用です。</li>
  <li><b>Phase（フェーズ）</b>を押します（下の表）。</li>
- <li><b>挙動</b>を押します：<span class="ui">強アンダー</span> <span class="ui">弱アンダー</span> <span class="ui">ニュートラル</span> <span class="ui">弱オーバー</span> <span class="ui">強オーバー</span>。間違えたら <span class="ui">このマスを空欄に戻す</span>。</li>
+ <li><b>挙動</b>を押します：<span class="ui">強アンダー</span> <span class="ui">弱アンダー</span> <span class="ui">ニュートラル</span> <span class="ui">弱オーバー</span> <span class="ui">強オーバー</span><br>間違えたときは <span class="ui">このマスを空欄に戻す</span> を押します。</li>
  <li>必要なら<b>その他の症状</b>を押します（下の表）。</li>
 </ol>
 <div class="note">無理に入れると、診断がぼやけます。迷うマスは空欄のままにしてください。「ニュートラル」は「ここは崩さないで」という意味で扱います。</div>
@@ -324,7 +324,7 @@ footer{color:var(--mute);font-size:12px;text-align:center;padding:8px 0 24px}
 </ul>
 
 <h3>セットアップシートから読み込む</h3>
-<p>MCS4 のセットアップシート（.xlsm）をドロップし、タブを選んで <span class="ui">読み込む</span>。<span class="ui">参照を見る</span> で、どのセルから何を読んだかを確認できます。</p>
+<p>MCS4 のセットアップシート（.xlsm）をドロップし、タブを選んで <span class="ui">読み込む</span> を押します。<span class="ui">参照を見る</span> で、どのセルから何を読んだかを確認できます。</p>
 <p class="small">読み方：A列の見出し（Spring・Damper・ARB など）を探し、その行から「列」と「行ずれ」でセルを決めます。キャンバーは実測が空なら狙い値を使います。プリロードは Spring の2行下の「Preload」行から、前は左前・後は左後の mm を読み、フラット数に直します。フロントウイングも読み込みます。シートの形が変わったら「セットチャートの参照」で直せます。</p>
 <h3>その他の欄</h3>
 <ul>
@@ -336,7 +336,7 @@ footer{color:var(--mute);font-size:12px;text-align:center;padding:8px 0 24px}
 
 <section id="log">
 <h2>9. テストログ</h2>
-<p>診断の <span class="ui">これを試す</span> から始めると、変更内容が自動で入ります。変更なしの走行は <span class="ui">基準走行（変更なし）を記録</span>。</p>
+<p>診断の <span class="ui">これを試す</span> から始めると、変更内容が自動で入ります。変更なしの走行は <span class="ui">基準走行（変更なし）を記録</span> を押します。</p>
 <ul>
  <li>フェーズごとの印象、ラップ、区間差、最高速、気温・路温・タイヤ周回・燃料、メモを入れて、判定（改善／変化なし／悪化）を選びます。</li>
  <li>前回と条件が大きく違う（路温±5℃・周回±5周・燃料±10L を超える）ときは「判定は参考程度」と出ます。</li>
@@ -404,7 +404,7 @@ footer{color:var(--mute);font-size:12px;text-align:center;padding:8px 0 24px}
 <tr><td>走行データ（AiM）</td><td>.xrk または .xrz（複数可）</td><td>同じ走行の .xrk と .xrz は1件です。後から直した車両名・メモが入る .xrk を優先します。</td></tr>
 </table></div>
 <h3>データファイル（パソコン間で共有）</h3>
-<p>はじめてのパソコンで <span class="ui">今のデータで新しく作る</span>、2台目以降は <span class="ui">既存のファイルを開く</span>。ブラウザを開き直したら、画面上部の <span class="ui">再接続</span> を1回押します。Safari では使えないので、書き出し・読み込みを使ってください。</p>
+<p>はじめてのパソコンで <span class="ui">今のデータで新しく作る</span>、2台目以降は <span class="ui">既存のファイルを開く</span> を押します。ブラウザを開き直したら、画面上部の <span class="ui">再接続</span> を1回押します。Safari では使えないので、書き出し・読み込みを使ってください。</p>
 <h3>保存しているデータ</h3>
 <p>種類ごとの件数を確認し、<span class="ui">中身を見る</span> で1件ずつ削除できます。大会別成績とセット履歴は1行ずつ編集・追加もできます。<span class="ui">初期値に戻す</span>・<span class="ui">すべて消す</span> もあります。</p>
 <h3>書き出し・読み込み</h3>
