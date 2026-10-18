@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Setup Analyzer 取扱説明書</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--ink:#1a1d21;--mute:#5b6470;--line:#dde1e6;--acc:#c8202a;--acc-bg:#fdecec;--ok:#1f7a4a;--ok-bg:#e6f4ec;--warn:#8a5a00;--warn-bg:#fff4dc;--code:#eef0f3;--info:#1d5fa8;--info-bg:#e8f0fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111316;--card:#1b1f24;--ink:#e8eaed;--mute:#98a2ad;--line:#2d333a;--acc:#ff6b70;--acc-bg:#3a1f22;--ok:#5fd394;--ok-bg:#16301f;--warn:#f0c060;--warn-bg:#2f2614;--code:#252a31;--info:#7fb2ee;--info-bg:#17263a}}
+:root[data-theme="dark"]{--bg:#111316;--card:#1b1f24;--ink:#e8eaed;--mute:#98a2ad;--line:#2d333a;--acc:#ff6b70;--acc-bg:#3a1f22;--ok:#5fd394;--ok-bg:#16301f;--warn:#f0c060;--warn-bg:#2f2614;--code:#252a31;--info:#7fb2ee;--info-bg:#17263a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.75 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif}
+header{background:var(--card);border-bottom:3px solid var(--acc);padding:18px 16px}
+header h1{margin:0;font-size:22px}header p{margin:2px 0 0;color:var(--mute);font-size:13px}
+.wrap{max-width:920px;margin:0 auto;padding:16px}
+nav.toc{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:16px}
+nav.toc ol{margin:6px 0 0;padding-left:1.6em;columns:2;column-gap:28px}
+nav.toc a{color:var(--ink);text-decoration:none}nav.toc a:hover{color:var(--acc)}
+nav.toc .new{font-size:11px;color:var(--acc);border:1px solid var(--acc);border-radius:4px;padding:0 4px;margin-left:4px}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:0 0 16px}
+h2{font-size:19px;margin:4px 0 10px;padding-left:10px;border-left:4px solid var(--acc)}
+h3{font-size:16px;margin:18px 0 6px}
+p{margin:6px 0}
+table{border-collapse:collapse;width:100%;margin:8px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--code);font-weight:600;white-space:nowrap}
+.scroll{overflow-x:auto}
+.ui{display:inline-block;border:1px solid var(--line);background:var(--code);border-radius:6px;padding:0 7px;font-size:13px;white-space:nowrap}
+.val{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;background:var(--code);border-radius:4px;padding:0 5px;white-space:nowrap}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}
+.tabs span{border:1px solid var(--line);border-radius:99px;padding:3px 11px;font-size:13px}
+.tabs span.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.tabs .gap{flex:1;border:none}
+.steps{counter-reset:s;list-style:none;padding:0;margin:8px 0}
+.steps li{counter-increment:s;position:relative;padding:8px 10px 8px 44px;border:1px solid var(--line);border-radius:8px;margin:6px 0}
+.steps li::before{content:counter(s);position:absolute;left:10px;top:8px;width:24px;height:24px;border-radius:50%;background:var(--acc);color:#fff;font-weight:700;text-align:center;line-height:24px;font-size:13px}
+.note{background:var(--warn-bg);border-left:4px solid var(--warn);padding:8px 12px;margin:10px 0;border-radius:0 6px 6px 0}
+.tip{background:var(--ok-bg);border-left:4px solid var(--ok);padding:8px 12px;margin:10px 0;border-radius:0 6px 6px 0}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0}
+.flow span{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--code);font-size:13px}
+.flow b{color:var(--mute)}
+.case{border:1px solid var(--line);border-radius:10px;margin:12px 0;overflow:hidden}
+.case>h3{margin:0;padding:8px 12px;background:var(--info-bg);color:var(--ink);font-size:15px;border-bottom:1px solid var(--line)}
+.case>h3 small{color:var(--info);font-weight:600;margin-right:6px}
+.case .body{padding:6px 12px 10px}
+.case dl{margin:4px 0;display:grid;grid-template-columns:5.5em 1fr;gap:4px 10px}
+.case dt{font-weight:600;color:var(--mute);font-size:13px;padding-top:2px}
+.case dd{margin:0}
+.case ol{margin:4px 0;padding-left:1.3em}
+.tiplist{list-style:none;padding:0;margin:8px 0}
+.tiplist li{border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:8px 0}
+.tiplist li b.h{display:block;color:var(--ok)}
+.top1,.top2,.top3{border-radius:4px;padding:0 6px}
+.top1{background:#ffe08a;color:#5a4300}.top2{background:#dfe3e8;color:#2f3a45}.top3{background:#f3cfae;color:#5c3415}
+.small{font-size:13px;color:var(--mute)}
+footer{color:var(--mute);font-size:12px;text-align:center;padding:8px 0 24px}
+@media(max-width:640px){nav.toc ol{columns:1}section{padding:12px}.case dl{grid-template-columns:1fr}.case dt{padding-top:6px}}
+@media print{body{background:#fff}section,nav.toc,.case{break-inside:avoid;border-color:#ccc}header{border-bottom-color:#c8202a}}
+</style>
+</head>
+<body>
+<header>
+ <h1>Setup Analyzer 取扱説明書</h1>
+ <p>Setup Data Analysis Logger　Ver 2.1.0　／　Category FIA-F4・Machine MCS4-24　／　2026-10-18 版</p>
+</header>
+<div class="wrap">
+
+<nav class="toc"><b>目次</b>
+<ol>
+ <li><a href="#about">このツールでできること</a></li>
+ <li><a href="#open">開き方とデータの保存</a></li>
+ <li><a href="#screen">画面の見方</a></li>
+ <li><a href="#flow">基本の流れ</a></li>
+ <li><a href="#cases">使用例</a><span class="new">新</span></li>
+ <li><a href="#tips">有効な使い方</a><span class="new">新</span></li>
+ <li><a href="#diag">診断</a></li>
+ <li><a href="#setup">現在のセット</a></li>
+ <li><a href="#log">テストログ</a></li>
+ <li><a href="#res">レース結果</a></li>
+ <li><a href="#runs">走行データ</a></li>
+ <li><a href="#hist">セット履歴</a></li>
+ <li><a href="#calc">計算</a></li>
+ <li><a href="#data">設定：データ管理</a></li>
+ <li><a href="#course">設定：サーキット・コーナー</a></li>
+ <li><a href="#base">設定：根拠と限界</a></li>
+ <li><a href="#damper">ダンパーとスタビの段</a></li>
+ <li><a href="#faq">困ったとき</a></li>
+</ol></nav>
+
+<section id="about">
+<h2>1. このツールでできること</h2>
+<p>ドライバーのコメント（どのコーナーの、どの場面で、アンダーかオーバーか）から、セットの改善策を出すツールです。改善策は、基本的な自動車工学の考え方に基づきます。</p>
+<ul>
+ <li><b>診断：</b>コーナー×フェーズの挙動から、バランスの弱点と、副作用の小さい改善策を出します。</li>
+ <li><b>記録：</b>試した変更と結果（テストログ）、レース結果、AiM の走行データ、過去のセットを残して見比べます。</li>
+ <li><b>取り込み：</b>セットアップシート（.xlsm）、ベスト一覧（.xlsx）、AiM のログ（.xrk／.xrz）を読み込みます。</li>
+</ul>
+<div class="note">改善策は「方向と優先順位」の目安です。何ノッチ・何mm動かすかは、実車とデータで最終判断してください。</div>
+</section>
+
+<section id="open">
+<h2>2. 開き方とデータの保存</h2>
+<h3>開き方</h3>
+<table>
+<tr><th>フォルダ版</th><td>SetupAnalyzer フォルダの <span class="ui">起動.html</span> か <span class="ui">index.html</span> をダブルクリックします。フォルダごと移動してください（HTMLだけでは動きません）。</td></tr>
+<tr><th>1枚版</th><td><span class="ui">SetupAnalyzer_日付_配布版.html</span> をダブルクリックします。このファイル1つだけで動きます。</td></tr>
+<tr><th>Windows</th><td>ZIPを右クリック →「すべて展開」してから開きます。ZIPの中から直接開くと動きません。</td></tr>
+<tr><th>ブラウザ</th><td>Chrome・Edge・Safari。インストールとネット接続は不要です。</td></tr>
+</table>
+<h3>データの保存</h3>
+<p>入力したデータは、開いたブラウザの中に自動で保存されます。別のブラウザや別のパソコンでは見えません。</p>
+<ul>
+ <li><b>別のパソコンへ移す：</b><span class="ui">⚙ 設定</span>→<span class="ui">データ管理</span>→「書き出し・読み込み」で JSON を書き出し、移行先で読み込みます。</li>
+ <li><b>MacとWindowsで共有：</b>同じ画面の「データファイル」で、OneDrive に置いた .json に接続すると、変更のたびに自動で保存されます（Edge・Chrome）。2台で同時に編集しないでください。</li>
+</ul>
+<div class="tip">配布版は、セット履歴・大会別成績・走行データなどの記録が入っていない、空の状態で始まります。自分のファイルから「データを足す」で追加します。</div>
+</section>
+
+<section id="screen">
+<h2>3. 画面の見方</h2>
+<p>画面上部に、題名と車種（Category・Machine）、いまの起点のセットが出ます。その下がタブです。</p>
+<div class="tabs"><span class="on">診断</span><span>現在のセット</span><span>テストログ</span><span>レース結果</span><span>走行データ</span><span>セット履歴</span><span>計算</span><span class="gap"></span><span>⚙ 設定</span></div>
+<p>普段は使わない画面は <span class="ui">⚙ 設定</span> の中にまとめています。押すと下に小さなタブが出ます。</p>
+<div class="tabs"><span class="on">データ管理</span><span>サーキット・コーナー</span><span>根拠と限界</span></div>
+<p>画面のいちばん下に、版番号とコピーライトが出ます。</p>
+</section>
+
+<section id="flow">
+<h2>4. 基本の流れ</h2>
+<div class="flow"><span>起点のセットを決める</span><b>→</b><span>診断で挙動を入れる</span><b>→</b><span>改善策を1つ試す</span><b>→</b><span>テストログに記録</span><b>→</b><span>良ければ次へ／悪ければ戻す</span></div>
+<ol class="steps">
+ <li><b>起点のセットを決める。</b><span class="ui">現在のセット</span>でセットアップシートを読み込むか、セット履歴・保存したセットから選びます。改善策はこのセットから計算します。</li>
+ <li><b>診断で挙動を入れる。</b><span class="ui">診断</span>でサーキット → コーナー → フェーズ → 挙動（強アンダー〜強オーバー）をボタンで入れます。はっきり感じたところだけで十分です。</li>
+ <li><b>改善策を1つ試す。</b>出てきた改善策から1つ選び <span class="ui">これを試す</span> を押すと、テストログに変更内容が入ります。</li>
+ <li><b>走行後に記録する。</b>印象・区間差・判定（改善／変化なし／悪化）を記録します。悪化・変化なしなら、元に戻すか確認が出ます（1変更1走行）。</li>
+</ol>
+</section>
+
+<section id="cases">
+<h2>5. 使用例</h2>
+<p>よくある場面ごとに、どの画面で何をするかをまとめました。サーキット名・数値は説明用の例です。</p>
+
+<div class="case"><h3><small>例1</small>テスト走行日：持ち込みセットから1つずつ詰める</h3><div class="body">
+<dl><dt>場面</dt><dd>朝の1本目のあと、ドライバーが「全体に曲がらない。とくに1コーナーのクリップで外へ逃げる」と言った。</dd>
+<dt>やること</dt><dd><ol>
+ <li><span class="ui">現在のセット</span>→<span class="ui">セットアップシートから</span>で、持ち込みセットのタブを読み込みます。<span class="ui">参照を見る</span>で値が正しく読めたか確認します。</li>
+ <li><span class="ui">今のセットを名前を付けて保存</span>で「富士 持ち込み」のように残します。戻すときの基準になります。</li>
+ <li><span class="ui">テストログ</span>で <span class="ui">基準走行（変更なし）を記録</span> を押し、1本目のラップ・区間タイム・路温を入れます。</li>
+ <li><span class="ui">診断</span>で、コーナー「1コーナー」・フェーズ「④クリップ」に <span class="ui">強アンダー</span>、コーナー「全体」・「④クリップ」に <span class="ui">弱アンダー</span> を入れます。</li>
+ <li>改善策の1番目（例：フロントARBを柔らかく）の <span class="ui">根拠を見る</span> で、崩れる恐れのあるマスを確かめてから <span class="ui">これを試す</span> を押します。</li>
+ <li>2本目のあと、テストログで印象と判定を入れて保存します。</li>
+</ol></dd>
+<dt>ポイント</dt><dd>1回に動かすのは1項目です。2つ同時に変えると、テストログの推論も「何が効いたか」の集計も使えなくなります。</dd></dl>
+</div></div>
+
+<div class="case"><h3><small>例2</small>1つのコーナーだけ悪い：ほかを崩さずに直したい</h3><div class="body">
+<dl><dt>場面</dt><dd>「ヘアピンの立ち上がりでリアが出る。ほかのコーナーはちょうどいい」。</dd>
+<dt>やること</dt><dd><ol>
+ <li>ヘアピン「⑥立ち上がり」に <span class="ui">弱オーバー</span> を入れます。</li>
+ <li>ちょうどいいと言われた主なコーナー（高速コーナーなど）の該当フェーズに <span class="ui">ニュートラル</span> を入れます。</li>
+ <li>改善策の「悪化の恐れがあるマス」に、ニュートラルを入れたマスが出ていない案を選びます。</li>
+</ol></dd>
+<dt>ポイント</dt><dd>「ニュートラル」は「ここは崩さないで」という意味で評価に入ります。良いところを入れておくと、副作用の大きい案が順位を下げます。</dd></dl>
+</div></div>
+
+<div class="case"><h3><small>例3</small>自分の案をツールの物差しで比べる</h3><div class="body">
+<dl><dt>場面</dt><dd>ツールの1番目はリアARBだが、エンジニアとしてはリアスプリングを1段柔らかくしたい。</dd>
+<dt>やること</dt><dd><ol>
+ <li>診断の改善策の下にある <b>あなたの案を試算する</b> で、項目「リアスプリング」・変更後の値「800（140.1N/mm）」を選びます。</li>
+ <li>出てきた「見込める改善」「悪化の恐れ」を、ツールの候補の数字と並べて比べます。</li>
+ <li>納得できたほうで <span class="ui">これを試す</span> を押します。</li>
+</ol></dd>
+<dt>ポイント</dt><dd>2段以上の変更も、その分の量で見積もります。差が小さいときは、交換の手間が少ないほうを選ぶのも有効です。</dd></dl>
+</div></div>
+
+<div class="case"><h3><small>例4</small>進入アンダーで、立ち上がりはオーバー</h3><div class="body">
+<dl><dt>場面</dt><dd>「入口は曲がらないのに、アクセルを踏むとリアが出る」。1つの案では片方しか直りません。</dd>
+<dt>やること</dt><dd><ol>
+ <li>「②ターンイン」に <span class="ui">弱アンダー</span>、「⑥立ち上がり」に <span class="ui">弱オーバー</span> を入れます。</li>
+ <li>ネガティブポイントに「進入（②③）でアンダー＋立ち上がり（⑤⑥）でオーバー」が出ることを確かめます。</li>
+ <li><b>2段階の組み合わせ</b> を見て、1つ目の案を先に試します。結果を見てから2つ目を試します。</li>
+</ol></dd>
+<dt>ポイント</dt><dd>組み合わせでも、試すのは1回に1つです。1つ目で片方が直り、もう片方が悪化しなければ、2つ目は要らないこともあります。</dd></dl>
+</div></div>
+
+<div class="case"><h3><small>例5</small>下りの進入だけオーバーになる</h3><div class="body">
+<dl><dt>場面</dt><dd>下りながら進入するコーナーで「ブレーキでリアが軽い」。</dd>
+<dt>やること</dt><dd><ol>
+ <li><span class="ui">⚙ 設定</span>→<span class="ui">サーキット・コーナー</span>で、そのコーナーの勾配を「下り」にします（初期値は入っていません）。</li>
+ <li>診断で「①ブレーキング」か「②ターンイン」に オーバー を入れます。</li>
+ <li><b>勾配から見た注意</b> に説明が出たら、セットで消すより、ブレーキの踏み方・進入の走り方で対応できるかをまず話し合います。</li>
+</ol></dd>
+<dt>ポイント</dt><dd>勾配で説明できる症状は、評価の重みを下げています。セットで消そうとすると、ほかのコーナーを崩しやすいためです。</dd></dl>
+</div></div>
+
+<div class="case"><h3><small>例6</small>変えたら効きすぎた：半分だけ戻したい</h3><div class="body">
+<dl><dt>場面</dt><dd>フロントARBを S2 から S1 にしたら、今度はターンインでオーバーになった。</dd>
+<dt>やること</dt><dd><ol>
+ <li>テストログで判定を入れると、<b>なぜこうなったか（推論）</b> に「行き過ぎ」と出ます。</li>
+ <li><span class="ui">現在のセット</span>のフロントARBで、中間位置の「S1.5 263.5（224N/mm）」を選びます。</li>
+ <li>次の走行で確かめます。</li>
+</ol></dd>
+<dt>ポイント</dt><dd>スタビには中間位置（1.5・2.5）があります。中間位置への移動は「半段」で、効きは1段の半分として見積もります（<a href="#damper">17章</a>）。</dd></dl>
+</div></div>
+
+<div class="case"><h3><small>例7</small>レース前：去年の同じサーキットのセットを呼び出す</h3><div class="body">
+<dl><dt>場面</dt><dd>大会の前に、過去にこのサーキットで速かったセットを起点にしたい。</dd>
+<dt>やること</dt><dd><ol>
+ <li><span class="ui">セット履歴</span>で、サーキットと種類（ドライアップなど）にチェックを入れて絞り込みます。</li>
+ <li>「その日のベスト」の色（<span class="top1">1位</span> <span class="top2">2位</span> <span class="top3">3位</span>）を目安に候補を選び、<span class="ui">レース結果</span>の大会別成績でトップ差も見比べます。</li>
+ <li>選んだ行の <span class="ui">使う</span> で現在のセットに読み込み、名前を付けて保存します。</li>
+</ol></dd>
+<dt>ポイント</dt><dd>路面・気温・タイヤが違えば、同じセットでも挙動は変わります。呼び出したセットは「起点」として扱い、初日の走行で診断し直してください。</dd></dl>
+</div></div>
+
+<div class="case"><h3><small>例8</small>スプリングを変える前に、前後のバランスを数字で見る</h3><div class="body">
+<dl><dt>場面</dt><dd>リアスプリングを硬くする案が出たが、ピッチの動きが変わりすぎないか気になる。</dd>
+<dt>やること</dt><dd><ol>
+ <li><span class="ui">計算</span>→「固有振動数・減衰比・前後比 Q」に、変更前と変更後のスプリングを入れて比べます。</li>
+ <li>「ARB対メインスプリング」で、スタビとの比がどう変わるかも見ます。</li>
+</ol></dd>
+<dt>ポイント</dt><dd>計算は判断の材料です。改善策の順位とあわせて、極端な値にならないかを確かめる使い方が向いています。</dd></dl>
+</div></div>
+</section>
+
+<section id="tips">
+<h2>6. 有効な使い方</h2>
+<ul class="tiplist">
+ <li><b class="h">はっきり感じたマスだけ入れる</b>迷うマスは空欄のままにします。無理に埋めると診断がぼやけます。入れる量より、確かさのほうが大事です。</li>
+ <li><b class="h">良いところは「ニュートラル」で守る</b>直したいマスだけ入れると、ほかを崩す案も上位に来ることがあります。良いコーナーにニュートラルを入れると、副作用の小さい案が上がります。</li>
+ <li><b class="h">「全体」と個別のコーナーを使い分ける</b>「どこでも曲がらない」は <span class="ui">全体</span>、「ここだけ」は個別のコーナーに入れます。両方あれば両方入れます。</li>
+ <li><b class="h">最初に基準走行を記録する</b>変更なしの走行を1本記録しておくと、次の判定と推論が「前回との差」で読めるようになります。</li>
+ <li><b class="h">1変更1走行、条件をそろえる</b>路温±5℃・タイヤ周回±5周・燃料±10L を超えると「判定は参考程度」と出ます。比べる2本は、なるべく同じ条件で走ります。</li>
+ <li><b class="h">ドライバーの言葉と、区間タイム・ロガーを両方残す</b>推論がかみ合わないときは、感じ方と実際の挙動がずれている場合もあります。区間タイムや AiM のデータで裏付けると、次の判断が確かになります。</li>
+ <li><b class="h">起点は名前を付けて保存してから変える</b>「鈴鹿 予選用」「富士 ロングラン」のように残しておくと、悪化したときにすぐ戻せます。</li>
+ <li><b class="h">今週触らない項目は「使わない手段」で外す</b>持ち込んでいないスプリングや、時間のかかる変更を外すと、その日に実際に試せる案だけが並びます。</li>
+ <li><b class="h">ダンパーはノッチ位置で効きが違う</b>数字が大きい（ソフト側の）ほど、1ノッチの効きは小さくなります。12より硬い側は順位を下げています。ソフト側で効きが感じられないときは、2ノッチ以上の変更を「あなたの案」で見積もります。</li>
+ <li><b class="h">車高は1フラット単位で考える</b>前1フラット＝0.85mm、後1フラット＝1.2mm です。レーキが付く案は「ストレートの伸びが落ちる恐れ」として順位が下がるので、前後を平行に変える案もあわせて見ます。</li>
+ <li><b class="h">症状のボタンも使う</b>「トラクション不足」「制動時リア不安定」などは、フェーズの挙動だけでは表しにくい症状です。当てはまるときに押します。</li>
+ <li><b class="h">大会の前後に書き出しておく</b><span class="ui">データ管理</span>→「書き出し・読み込み」で JSON を残すと、ブラウザのデータが消えても戻せます。</li>
+</ul>
+</section>
+
+<section id="diag">
+<h2>7. 診断</h2>
+<h3>入れ方</h3>
+<ol class="steps">
+ <li><b>Circuit（サーキット）</b>を選びます。</li>
+ <li><b>Corner（コーナー）</b>を押します。先頭の <span class="ui">全体</span> は、コーナーを決めずに「1周を通して」の印象用です。</li>
+ <li><b>Phase（フェーズ）</b>を押します（下の表）。</li>
+ <li><b>挙動</b>を押します：<span class="ui">強アンダー</span> <span class="ui">弱アンダー</span> <span class="ui">ニュートラル</span> <span class="ui">弱オーバー</span> <span class="ui">強オーバー</span>。間違えたら <span class="ui">このマスを空欄に戻す</span>。</li>
+ <li>必要なら<b>その他の症状</b>を押します（下の表）。</li>
+</ol>
+<div class="note">無理に入れると、診断がぼやけます。迷うマスは空欄のままにしてください。「ニュートラル」は「ここは崩さないで」という意味で扱います。</div>
+<h3>フェーズ（6つ）</h3>
+<div class="scroll"><table>
+<tr><th>フェーズ</th><th>場面</th></tr>
+<tr><td>①ブレーキング</td><td>直線での制動</td></tr>
+<tr><td>②ターンイン</td><td>切り始め・ブレーキ中</td></tr>
+<tr><td>③ブレーキリリース</td><td>ロールが始まる（ダンパーが効く区間）</td></tr>
+<tr><td>④クリップ</td><td>一定舵・定常旋回（スタビ・スプリングが効く区間）</td></tr>
+<tr><td>⑤アクセルオン</td><td>舵を戻し始める（ダンパーが効く区間）</td></tr>
+<tr><td>⑥立ち上がり</td><td>加速・脱出</td></tr>
+</table></div>
+<h3>その他の症状（8つ）</h3>
+<p>制動力不足／トラクション不足／ノーズダイブ過多／リアのロール過多／回頭が遅い／接地感不足／急にグリップが抜ける／制動時リア不安定</p>
+<h3>結果の読み方</h3>
+<table>
+<tr><th>バランスの傾向</th><td>フェーズごと、速度域（低速・中速・高速）ごとの平均です。アンダー寄りかオーバー寄りかが分かります。</td></tr>
+<tr><th>ネガティブポイント</th><td>入力から見つかった弱点の型です（例：「④クリップ（定常旋回）でアンダー」「進入（②③）でアンダー＋立ち上がり（⑤⑥）でオーバー」）。</td></tr>
+<tr><th>勾配から見た注意</th><td>下りの進入オーバーなど、勾配で説明できる症状です。セットで消すと他のコーナーを崩しやすいので、評価の重みを下げています。</td></tr>
+<tr><th>改善策</th><td>今のセットから1項目だけ動かす候補を、副作用の小さい順に5つ出します。「改善」と「悪化」の量、悪化の恐れがあるマスも出ます。評価は「改善 − 2×悪化の恐れ」です。</td></tr>
+<tr><th>根拠を見る</th><td>改善策ごとに開けます。変更の仕組み（なぜバランスが動くのか）、効く場面、今回入れたマスがどう動く見込みか、崩れる恐れのあるマスが出ます。</td></tr>
+<tr><th>車高を変える案</th><td>フロント車高・リア車高（1フラット）と、前後を平行に上げ下げする案（レーキはほぼ変わらない）も候補に入ります。空力（速いコーナーほど効く）とメカ（全速度域）を分けて見積もり、レーキが付く案は「ストレートの伸びが落ちる恐れ」として順位を下げます。平行に上げると重心が上がり、メカニカルグリップ（接地感）が増える場合がある、という考え方も入れています。</td></tr>
+<tr><th>スタビを変える案</th><td>1段先の位置を候補にします。中間位置（1.5・2.5）へ動く案には「（0.5段）」と付き、効きを半分として見積もります。</td></tr>
+<tr><th>あなたの案</th><td>試したい変更（項目と変更後の値）を選ぶと、ツールの候補と同じ方法で、見込める改善・悪化の恐れ・根拠を出します。2段以上の変更も、その分の量で見積もります。<span class="ui">これを試す</span> でテストログへ送れます。</td></tr>
+<tr><th>2段階の組み合わせ</th><td>1つ目の副作用を2つ目で打ち消す組み合わせです。試すのは1回に1つです。</td></tr>
+</table>
+<h3>そのほか</h3>
+<ul>
+ <li><b>走行の情報：</b>日付・セッション・タイヤ・気温・路温・燃料。テストログに引き継がれます。</li>
+ <li><b>全コーナー表：</b>入力を一覧で見て、直接直せます。<span class="ui">診断する</span> で結果の場所へ移ります（結果は入力のたびに自動で更新されます）。<span class="ui">この診断を保存（履歴へ）</span> で残せます。</li>
+</ul>
+</section>
+
+<section id="setup">
+<h2>8. 現在のセット</h2>
+<h3>起点のセット</h3>
+<p>いま起点にしているセットを、サーキット・タブ・日付・車番・種類・出所で表示します。値を手で直すと「編集あり」と付きます。</p>
+<table>
+<tr><th>セットアップシートから</th><td>下の読み込み欄へ移ります。</td></tr>
+<tr><th>セット履歴から</th><td>セット履歴タブで、行の <span class="ui">使う</span> を押すと起点になります。</td></tr>
+<tr><th>保存したセットから</th><td>名前を付けて残したセットを、<span class="ui">起点にする</span> で呼び出します。</td></tr>
+<tr><th>今のセットを名前を付けて保存</th><td>「鈴鹿 予選用」のように名前を付けて残します。</td></tr>
+</table>
+
+<h3>入力できる項目と刻み</h3>
+<p>選択肢と刻み幅は、MCS4 のセットアップシートの入力に合わせています。</p>
+<div class="scroll"><table>
+<tr><th>項目</th><th>入れ方・範囲</th><th>表示の例</th></tr>
+<tr><td>スプリング（前・後）</td><td>750〜1100 lb/in、50刻み</td><td><span class="val">900（157.6N/mm）</span></td></tr>
+<tr><td>ARB（前・後）</td><td>10段：S1・S1.5・S2・S2.5・S3・H1・H1.5・H2・H2.5・H3。横の単位は N/deg</td><td><span class="val">S1 246（194N/mm）</span>　位置・N/deg・括弧内が N/mm</td></tr>
+<tr><td>ダンパー（前・後）</td><td>0〜30、1刻み（0＝最硬・30＝最軟）</td><td><span class="val">15</span></td></tr>
+<tr><td>プリロード（前・後）</td><td>−14〜+24フラット（−4.67〜+8.00mm）、1フラット刻み。1フラット＝1/3mm、1回転＝2mm</td><td><span class="val">+3フラット（+1.00mm）</span></td></tr>
+<tr><td>車高（前・後）</td><td>10〜39mm、0.2mm刻み</td><td><span class="val">25.2</span></td></tr>
+<tr><td>キャンバー（前・後）</td><td>1.5〜4.9°、0.1°刻み</td><td><span class="val">3.2</span></td></tr>
+<tr><td>トー（前はアウト・後はイン）</td><td>−0.5〜3.5mm、0.5mm刻み</td><td><span class="val">1.0</span></td></tr>
+<tr><td>リア・ジオメトリ</td><td>32通りから選択</td><td><span class="val">記号（RC 〇〇／AS 〇〇%）</span></td></tr>
+<tr><td>フロントウイング</td><td>−1・0・1・2・3°</td><td><span class="val">3°</span></td></tr>
+<tr><td>リアウイング</td><td>19位置（B1・C1を除く）</td><td><span class="val">B5（6.8°）</span></td></tr>
+<tr><td>ブレーキ配分（フロント）</td><td>%で入力</td><td><span class="val">59</span></td></tr>
+</table></div>
+<ul>
+ <li>プリロードとフロントウイングは「—（未入力）」も選べます。どちらも記録用で、いまの診断の計算には使っていません。</li>
+ <li>フロントウイングの −3 は、3° として読み込みます（セット履歴・シートの取り込みも同じ）。</li>
+ <li>選択肢にない値が保存されていると、消さずに「（選択肢外）」として先頭に表示します。数値の欄は、刻みから外れた値もそのまま残ります（矢印を押すと刻みの値へ動きます）。</li>
+ <li>スプリングは lb/in の数値で保存し、N/mm は表示だけです。</li>
+</ul>
+
+<h3>セットアップシートから読み込む</h3>
+<p>MCS4 のセットアップシート（.xlsm）をドロップし、タブを選んで <span class="ui">読み込む</span>。<span class="ui">参照を見る</span> で、どのセルから何を読んだかを確認できます。</p>
+<p class="small">読み方：A列の見出し（Spring・Damper・ARB など）を探し、その行から「列」と「行ずれ」でセルを決めます。キャンバーは実測が空なら狙い値を使います。プリロードは Spring の2行下の「Preload」行から、前は左前・後は左後の mm を読み、フラット数に直します。フロントウイングも読み込みます。シートの形が変わったら「セットチャートの参照」で直せます。</p>
+<h3>その他の欄</h3>
+<ul>
+ <li><b>ダンパーの効き方：</b>使える範囲と、ノッチ位置ごとの効き（<a href="#damper">17. ダンパーとスタビの段</a>）。</li>
+ <li><b>この車の制約：</b>前RC・キャスターは変えられない、フロントウイングは3°固定、など。合わない改善策は出さないか、注意を付けます。</li>
+ <li><b>使わない手段：</b>チェックした変更（例：持ち込んでいないスプリング）は、改善策に出しません。</li>
+</ul>
+</section>
+
+<section id="log">
+<h2>9. テストログ</h2>
+<p>診断の <span class="ui">これを試す</span> から始めると、変更内容が自動で入ります。変更なしの走行は <span class="ui">基準走行（変更なし）を記録</span>。</p>
+<ul>
+ <li>フェーズごとの印象、ラップ、区間差、最高速、気温・路温・タイヤ周回・燃料、メモを入れて、判定（改善／変化なし／悪化）を選びます。</li>
+ <li>前回と条件が大きく違う（路温±5℃・周回±5周・燃料±10L を超える）ときは「判定は参考程度」と出ます。</li>
+ <li>判定が悪化・変化なしなら、保存時に変更を元に戻すか聞いてきます。</li>
+ <li>「何が効いたか」の集計は、改善策の順位に反映されます。</li>
+ <li><b>なぜこうなったか（推論）：</b>判定を選ぶと、変更の仕組みから予想される動きと、前回の記録からの印象の変化を照らし合わせて、理由の仮説を出します（予想どおり／行き過ぎ／逆に動いた／変わらなかった）。条件の違いや、区間タイムと印象の食い違いにも触れます。記録の一覧からも開けます。</li>
+ <li>推論がかみ合わないときは、ドライバーのインプレッション（感じ方・伝え方）が実際の挙動とずれている可能性にも触れます。区間タイムやロガーのデータで確かめてください。</li>
+</ul>
+</section>
+
+<section id="res">
+<h2>10. レース結果</h2>
+<ul>
+ <li><b>記録した結果：</b>上位5人の5周平均との区間差（S1〜S3）・最高速。表示する車番をチェックで選びます。「車番を追加」で一覧に足し、「車番を削除…」で一覧から外せます（データは消えません。自分の車番は外せません）。</li>
+ <li><b>大会別成績：</b>予選・決勝ファステストのトップ差と、そのときのセット。</li>
+ <li>追加は <span class="ui">⚙ 設定</span>→<span class="ui">データ管理</span>→「データを足す」で行います。</li>
+</ul>
+</section>
+
+<section id="runs">
+<h2>11. 走行データ</h2>
+<p>AiM のログ（.xrk／.xrz）から読み取った、日付・時刻・コース・ドライバー・車両・ベストラップの一覧です。</p>
+<ul>
+ <li>サーキット・ドライバーで絞り込み、「日ごとのベスト」と「すべての走行」を切り替えます。</li>
+ <li>ベストラップの上位3つを色で表示します（サーキットごと）：<span class="top1">1位</span> <span class="top2">2位</span> <span class="top3">3位</span></li>
+ <li>ベストラップは、ログの中で「その時点のベスト更新」の印が付いた周のうち、最も速いものです。</li>
+</ul>
+</section>
+
+<section id="hist">
+<h2>12. セット履歴</h2>
+<ul>
+ <li>車番・種類（ドライアップ／ドライダウン／ウエットアップ／ウエットダウン）・サーキット・年で絞り込めます（チェックは複数可）。</li>
+ <li>スプリング〜ウイングは「フロント/リア」の順です。<span class="ui">使う</span> で現在のセットに読み込みます。プリロードとフロントウイングも一緒に入ります。</li>
+ <li><b>その日のベスト：</b>同じ日・同じサーキットで、車番かドライバーの名字が同じ走行データの最速ラップ。上位3つは色が付きます。文字に触れると、ドライバー・時刻・ファイル名が出ます。</li>
+</ul>
+</section>
+
+<section id="calc">
+<h2>13. 計算</h2>
+<p>次の計算ができます。各欄の説明に、入れる値の目安があります。</p>
+<div class="scroll"><table>
+<tr><th>冷間タイヤ内圧</th><td>狙いのホット圧・ホット時のタイヤ温度・外気温から、冷間で入れる内圧を出します。</td></tr>
+<tr><th>固有振動数・減衰比・前後比 Q</th><td>スプリング・ダンパーをホイール位置に換算して計算します（換算＝値÷レバー比²、レバー比＝Wheel/Spring）。</td></tr>
+<tr><th>ARB対メインスプリング</th><td>スタビとメインスプリングの、ホイール換算レートの比を出します。</td></tr>
+<tr><th>タイヤ温度の診断</th><td>内側ショルダー・中央・外側ショルダーの温度から、内圧・キャンバーの傾向を見ます。走行直後に、できるだけ速く測ります。</td></tr>
+<tr><th>各輪荷重の概算</th><td>センサーなしで各輪の荷重を概算します。車両質量の初期値は660kg（ドライバー込み）です。</td></tr>
+<tr><th>車高と空力</th><td>前後の車高変更による、ダウンフォースと空力バランスの変化の目安です。</td></tr>
+<tr><th>リア・ジオメトリの候補</th><td>現在の組合せから、RCを高く（オーバー側へ）／低く（アンダー側へ）する候補を出します。アンチスクワットも同時に変わります。</td></tr>
+<tr><th>アンダー角</th><td>ホイールベース・横加速度・速度・操舵角（またはハンドル角とステアリングレシオ）から、アンダーの量を出します。</td></tr>
+</table></div>
+</section>
+
+<section id="data">
+<h2>14. 設定：データ管理</h2>
+<h3>このデータの車種</h3>
+<p>Category と Machine。画面上部に表示されます。データファイルは車種ごとに1つ作ります。</p>
+<h3>データを足す</h3>
+<p>ファイルをドロップ（または押して選択）すると確認表が出ます。<span class="ui">追加</span> を押すまで保存されません。すでにあるものは「登録済み」と出て、重複しません。</p>
+<div class="scroll"><table>
+<tr><th>足し先</th><th>ファイル</th><th>ポイント</th></tr>
+<tr><td>レース結果</td><td>ベスト一覧ツールの .xlsx（例：〇〇 第5戦 決勝 ベスト一覧.xlsx）</td><td>車番を複数チェックしてまとめて計算します。サーキット・日付は画面で選び、日付とメモは行ごとに直せます。</td></tr>
+<tr><td>大会別成績</td><td>.csv または .xlsx（1行目が見出し）</td><td>「今のデータを書き出す（CSV）」で出したものを Excel で編集して戻せます。「追加」か「置き換え」を選びます。</td></tr>
+<tr><td>セット履歴</td><td>MCS4 セットアップシート .xlsm（複数可）</td><td>セットのタブ1枚が1行です。日付・車番・サーキット・種類はシートから読みます。プリロードも入ります。</td></tr>
+<tr><td>走行データ（AiM）</td><td>.xrk または .xrz（複数可）</td><td>同じ走行の .xrk と .xrz は1件です。後から直した車両名・メモが入る .xrk を優先します。</td></tr>
+</table></div>
+<h3>データファイル（パソコン間で共有）</h3>
+<p>はじめてのパソコンで <span class="ui">今のデータで新しく作る</span>、2台目以降は <span class="ui">既存のファイルを開く</span>。ブラウザを開き直したら、画面上部の <span class="ui">再接続</span> を1回押します。Safari では使えないので、書き出し・読み込みを使ってください。</p>
+<h3>保存しているデータ</h3>
+<p>種類ごとの件数を確認し、<span class="ui">中身を見る</span> で1件ずつ削除できます。大会別成績とセット履歴は1行ずつ編集・追加もできます。<span class="ui">初期値に戻す</span>・<span class="ui">すべて消す</span> もあります。</p>
+<h3>書き出し・読み込み</h3>
+<p>種類を選んで JSON に書き出します。読み込みは「追加（重複は除く）」か「置き換え」を選べます。</p>
+</section>
+
+<section id="course">
+<h2>15. 設定：サーキット・コーナー</h2>
+<p>コーナーの順・名前・勾配・速度域を直せます。コースやサーキットの追加もできます。</p>
+<ul>
+ <li><b>速度域</b>（低速・中速・高速）は、空力（リアウイング・車高）を変える案の効き方に使います。</li>
+ <li><b>勾配</b>（上り・平坦・下り・谷・頂上など）は、診断の「勾配から見た注意」に使います。初期値は入っていないので、実際の路面に合わせて選んでください。</li>
+</ul>
+</section>
+
+<section id="base">
+<h2>16. 設定：根拠と限界</h2>
+<p>改善策の根拠の考え方と、このツールの限界、この車の値の出どころをまとめています。判断に迷ったら、ここを読んでください。</p>
+</section>
+
+<section id="damper">
+<h2>17. ダンパーとスタビの段</h2>
+<h3>ダンパー</h3>
+<p>MCS4 のダンパーは単一調整です（0＝最硬・30＝最軟）。</p>
+<table>
+<tr><th>基準</th><td>マニュアル値 15（ここでの1ノッチを100%とします）</td></tr>
+<tr><th>使える範囲</th><td>9〜24（8以下はスティック、25以上は減衰力がほとんどかからない）。範囲の外へは改善策を出しません。</td></tr>
+<tr><th>改善策の単位</th><td>1ノッチ（1N）ずつ。数字が大きいほど1Nの効きが小さいので、その分を評価に反映します。</td></tr>
+<tr><th>締める側</th><td>12より硬い側はめったに使わない領域として、順位を下げます。</td></tr>
+</table>
+<div class="scroll"><table>
+<tr><th>ノッチ位置</th><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>17</td><td>20</td><td>25</td></tr>
+<tr><th>1Nの効き</th><td>300%</td><td>250%</td><td>208%</td><td>173%</td><td>144%</td><td>120%</td><td>100%</td><td>63%</td><td>32%</td><td>10%</td></tr>
+</table></div>
+<p class="small">初期値です。基準・範囲・効きは「現在のセット」→「ダンパーの効き方」で変えられます。実測ではなく仮定の値なので、実車の感覚や特性表に合わせて直してください。</p>
+<h3>スタビ（ARB）</h3>
+<table>
+<tr><th>段の並び</th><td>S1 → S1.5 → S2 → S2.5 → S3 → H1 → H1.5 → H2 → H2.5 → H3（柔らかい順）</td></tr>
+<tr><th>1段</th><td>S1→S2、S3→H1 のような整数位置の移動です。</td></tr>
+<tr><th>半段</th><td>中間位置（1.5・2.5）への移動です。効きは1段の半分として見積もります。</td></tr>
+</table>
+</section>
+
+<section id="faq">
+<h2>18. 困ったとき</h2>
+<table>
+<tr><th>前の記録が見えない</th><td>別のブラウザや、別の場所に置いたファイルで開いていないか確認してください。データはブラウザごとに保存されます。</td></tr>
+<tr><th>Windowsで開かない</th><td>ZIPを展開してから開いてください。フォルダ版は、フォルダごと移動します。</td></tr>
+<tr><th>改善策が出ない</th><td>挙動を1つ以上入れてください。「ニュートラル」だけでは改善策は出ません。「使わない手段」で外しすぎていないかも確認します。</td></tr>
+<tr><th>シートの値がずれる</th><td><span class="ui">参照を見る</span> でセルを確認し、「セットチャートの参照」で列・行ずれを直します。</td></tr>
+<tr><th>「（選択肢外）」と出る</th><td>保存されている値が、いまの選択肢にない値です（例：以前の版で入れた値）。値は消えていません。選択肢から選び直すと置き換わります。</td></tr>
+<tr><th>プリロードが読み込まれない</th><td>シートの Spring の2行下が「Preload」の行になっているか確認してください。違う形のシートでは読みません。</td></tr>
+<tr><th>.xrz が読めない</th><td>古いブラウザでは展開できないことがあります。同じ名前の .xrk を使ってください。</td></tr>
+<tr><th>「データファイルに再接続」と出る</th><td>ブラウザを開き直したときに出ます。<span class="ui">再接続</span> を1回押します。</td></tr>
+</table>
+</section>
+
+<footer>Setup Analyzer Ver 2.1.0 取扱説明書　2026-10-18 版<br>© 2026 KAM SIMULATOR STUDIO</footer>
+</div>
+</body>
+</html>
